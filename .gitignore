@@ -69,3 +69,4 @@ __build__/**
 *.swp
 /local.settings.json
 /node_modules
+node_modules/
