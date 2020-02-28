@@ -64,8 +64,14 @@ function run(context, req) {
                 context.res = response.create();
             }
         }
-        var response = new http_response_1.HttpResponse(http_response_1.Status.SUCCESS, "Successfully uploaded", { "test": 1 });
-        context.res = response.create();
+        else if (command == "test") {
+            var response = new http_response_1.HttpResponse(http_response_1.Status.SUCCESS, "Test successful");
+            context.res = response.create();
+        }
+        else {
+            var response = new http_response_1.HttpResponse(http_response_1.Status.SUCCESS, "Successfully uploaded", { "test": 1 });
+            context.res = response.create();
+        }
     });
 }
 exports.run = run;
