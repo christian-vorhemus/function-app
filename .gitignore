@@ -71,7 +71,3 @@ __build__/**
 /local.settings.json
 bin/
 obj/
-
-# Ignores compiled TypeScript files
-/*/*.js
-/*/*.js.map
