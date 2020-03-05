@@ -1,37 +1,15 @@
 {
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
-    "parameters": {
-        "sites_testverseagility_name": {
-            "defaultValue": "testverseagility45",
-            "type": "String"
-        },
-        "components_testverseagility_name": {
-            "defaultValue": "testverseagility45",
-            "type": "String"
-        },
-        "serverfarms_ASP_TestVerseagility_ab85_name": {
-            "defaultValue": "ASP-TestVerseagility-ab8545",
-            "type": "String"
-        },
-        "storageAccounts_verseagilitystorage_name": {
-            "defaultValue": "verseagilitystorage45",
-            "type": "String"
-        },
-        "databaseAccounts_testverseagility_name": {
-            "defaultValue": "testverseagility45",
-            "type": "String"
-        },
-        "smartdetectoralertrules_failure_anomalies___testverseagility_name": {
-            "defaultValue": "failure anomalies - testverseagility",
-            "type": "String"
-        },
-        "actiongroups_application_20insights_20smart_20detection_externalid": {
-            "defaultValue": "/subscriptions/3447c063-0423-47ea-96ce-85d9fef770f0/resourceGroups/testverseagility/providers/microsoft.insights/actiongroups/application%20insights%20smart%20detection",
-            "type": "String"
-        }
-    },
+    "parameters": {},
     "variables": {
+        "functionName": "[toLower(concat('versfunction', uniqueString(resourceGroup().id) ) )]",
+        "insightsComponent": "[toLower(concat('versinsights', uniqueString(resourceGroup().id) ) )]",
+        "servicePlan": "[toLower(concat('ASP-Serviceplan-', uniqueString(resourceGroup().id) ) )]",
+        "databaseName": "[toLower(concat('verscosmos', uniqueString(resourceGroup().id) ) )]",
+        "ruleName": "failure anomalies - versinsights",
+        "storageName": "[toLower(concat('ver', uniqueString(resourceGroup().id) ) )]",
+        "ruleScope": "[concat(resourceGroup().id, '/providers/microsoft.insights/actiongroups/application%20insights%20smart%20detection')]",
         "repoURL": "https://github.com/christian-vorhemus/function-app.git",
         "branch": "master"
     },
@@ -39,7 +17,7 @@
         {
             "type": "Microsoft.DocumentDB/databaseAccounts",
             "apiVersion": "2019-12-12",
-            "name": "[parameters('databaseAccounts_testverseagility_name')]",
+            "name": "[variables('databaseName')]",
             "location": "West Europe",
             "tags": {
                 "defaultExperience": "Core (SQL)",
@@ -72,7 +50,7 @@
         {
             "type": "microsoft.insights/components",
             "apiVersion": "2015-05-01",
-            "name": "[parameters('components_testverseagility_name')]",
+            "name": "[variables('insightsComponent')]",
             "location": "westeurope",
             "kind": "web",
             "properties": {
@@ -83,7 +61,7 @@
         {
             "type": "Microsoft.Storage/storageAccounts",
             "apiVersion": "2019-06-01",
-            "name": "[parameters('storageAccounts_verseagilitystorage_name')]",
+            "name": "[variables('storageName')]",
             "location": "westeurope",
             "sku": {
                 "name": "Standard_RAGRS",
@@ -117,7 +95,7 @@
         {
             "type": "Microsoft.Web/serverfarms",
             "apiVersion": "2018-02-01",
-            "name": "[parameters('serverfarms_ASP_TestVerseagility_ab85_name')]",
+            "name": "[variables('servicePlan')]",
             "location": "West Europe",
             "sku": {
                 "name": "Y1",
@@ -141,10 +119,10 @@
         {
             "type": "microsoft.alertsmanagement/smartdetectoralertrules",
             "apiVersion": "2019-06-01",
-            "name": "[parameters('smartdetectoralertrules_failure_anomalies___testverseagility_name')]",
+            "name": "[variables('ruleName')]",
             "location": "global",
             "dependsOn": [
-                "[resourceId('microsoft.insights/components', parameters('components_testverseagility_name'))]"
+                "[resourceId('microsoft.insights/components', variables('insightsComponent'))]"
             ],
             "properties": {
                 "description": "Failure Anomalies notifies you of an unusual rise in the rate of failed HTTP requests or dependency calls.",
@@ -163,11 +141,11 @@
                     ]
                 },
                 "scope": [
-                    "[resourceId('microsoft.insights/components', parameters('components_testverseagility_name'))]"
+                    "[resourceId('microsoft.insights/components', variables('insightsComponent'))]"
                 ],
                 "actionGroups": {
                     "groupIds": [
-                        "[parameters('actiongroups_application_20insights_20smart_20detection_externalid')]"
+                        "[variables('ruleScope')]"
                     ]
                 }
             }
@@ -175,9 +153,9 @@
         {
             "type": "Microsoft.DocumentDB/databaseAccounts/sqlDatabases",
             "apiVersion": "2019-12-12",
-            "name": "[concat(parameters('databaseAccounts_testverseagility_name'), '/data')]",
+            "name": "[concat(variables('databaseName'), '/data')]",
             "dependsOn": [
-                "[resourceId('Microsoft.DocumentDB/databaseAccounts', parameters('databaseAccounts_testverseagility_name'))]"
+                "[resourceId('Microsoft.DocumentDB/databaseAccounts', variables('databaseName'))]"
             ],
             "properties": {
                 "resource": {
@@ -189,9 +167,9 @@
         {
             "type": "Microsoft.Storage/storageAccounts/blobServices",
             "apiVersion": "2019-06-01",
-            "name": "[concat(parameters('storageAccounts_verseagilitystorage_name'), '/default')]",
+            "name": "[concat(variables('storageName'), '/default')]",
             "dependsOn": [
-                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_verseagilitystorage_name'))]"
+                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageName'))]"
             ],
             "sku": {
                 "name": "Standard_RAGRS"
@@ -208,9 +186,9 @@
         {
             "type": "Microsoft.Storage/storageAccounts/fileServices",
             "apiVersion": "2019-06-01",
-            "name": "[concat(parameters('storageAccounts_verseagilitystorage_name'), '/default')]",
+            "name": "[concat(variables('storageName'), '/default')]",
             "dependsOn": [
-                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_verseagilitystorage_name'))]"
+                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageName'))]"
             ],
             "sku": {
                 "name": "Standard_RAGRS"
@@ -224,27 +202,27 @@
         {
             "type": "Microsoft.Web/sites",
             "apiVersion": "2018-11-01",
-            "name": "[parameters('sites_testverseagility_name')]",
+            "name": "[variables('functionName')]",
             "location": "West Europe",
             "dependsOn": [
-                "[resourceId('Microsoft.Web/serverfarms', parameters('serverfarms_ASP_TestVerseagility_ab85_name'))]"
+                "[resourceId('Microsoft.Web/serverfarms', variables('servicePlan'))]"
             ],
             "kind": "functionapp",
             "properties": {
                 "enabled": true,
                 "hostNameSslStates": [
                     {
-                        "name": "[concat(parameters('sites_testverseagility_name'), '.azurewebsites.net')]",
+                        "name": "[concat(variables('functionName'), '.azurewebsites.net')]",
                         "sslState": "Disabled",
                         "hostType": "Standard"
                     },
                     {
-                        "name": "[concat(parameters('sites_testverseagility_name'), '.scm.azurewebsites.net')]",
+                        "name": "[concat(variables('functionName'), '.scm.azurewebsites.net')]",
                         "sslState": "Disabled",
                         "hostType": "Repository"
                     }
                 ],
-                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('serverfarms_ASP_TestVerseagility_ab85_name'))]",
+                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('servicePlan'))]",
                 "reserved": false,
                 "isXenon": false,
                 "hyperV": false,
@@ -263,7 +241,7 @@
                     "name": "web",
                     "type": "sourcecontrols",
                     "dependsOn": [
-                        "[resourceId('Microsoft.Web/Sites', parameters('sites_testverseagility_name'))]"
+                        "[resourceId('Microsoft.Web/Sites', variables('functionName'))]"
                     ],
                     "properties": {
                         "RepoUrl": "[variables('repoURL')]",
@@ -276,14 +254,19 @@
                   "type": "config",
                   "apiVersion": "2018-11-01",
                   "dependsOn": [
-                    "[resourceId('Microsoft.Web/Sites', parameters('sites_testverseagility_name'))]"
+                    "[resourceId('Microsoft.Web/Sites', variables('functionName'))]",
+                    "[resourceId('microsoft.insights/components', variables('insightsComponent'))]"
                   ],
                   "tags": {
                     "displayName": "appsettings"
                   },
                   "properties": {
+                    "APPINSIGHTS_INSTRUMENTATIONKEY": "[reference(resourceId('Microsoft.Insights/components', variables('insightsComponent')), '2014-04-01').InstrumentationKey]",
+                    "APPLICATIONINSIGHTS_CONNECTION_STRING": "[concat('InstrumentationKey=', reference(resourceId('Microsoft.Insights/components', variables('insightsComponent')), '2014-04-01').InstrumentationKey)]",
+                    "AzureWebJobsStorage": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storageName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageName')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).keys[0].value, ';EndpointSuffix=core.windows.net')]",
+                    "CosmosDBConnectionString": "[listConnectionStrings(resourceId('Microsoft.DocumentDB/databaseAccounts', variables('databaseName')), '2019-12-12').connectionStrings[0].connectionString]",
                     "FUNCTIONS_WORKER_RUNTIME": "node",
-                    "FUNCTIONS_EXTENSION_VERSION": "~2",
+                    "FUNCTIONS_EXTENSION_VERSION": "~3",
                     "WEBSITE_NODE_DEFAULT_VERSION": "~10"
                   }
                 }
@@ -292,10 +275,10 @@
         {
             "type": "Microsoft.Web/sites/config",
             "apiVersion": "2018-11-01",
-            "name": "[concat(parameters('sites_testverseagility_name'), '/web')]",
+            "name": "[concat(variables('functionName'), '/web')]",
             "location": "West Europe",
             "dependsOn": [
-                "[resourceId('Microsoft.Web/sites', parameters('sites_testverseagility_name'))]"
+                "[resourceId('Microsoft.Web/sites', variables('functionName'))]"
             ],
             "properties": {
                 "numberOfWorkers": 1,
@@ -371,10 +354,10 @@
         {
             "type": "Microsoft.Web/sites/hostNameBindings",
             "apiVersion": "2018-11-01",
-            "name": "[concat(parameters('sites_testverseagility_name'), '/', parameters('sites_testverseagility_name'), '.azurewebsites.net')]",
+            "name": "[concat(variables('functionName'), '/', variables('functionName'), '.azurewebsites.net')]",
             "location": "West Europe",
             "dependsOn": [
-                "[resourceId('Microsoft.Web/sites', parameters('sites_testverseagility_name'))]"
+                "[resourceId('Microsoft.Web/sites', variables('functionName'))]"
             ],
             "properties": {
                 "siteName": "testverseagility",
@@ -384,10 +367,10 @@
         {
             "type": "Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers",
             "apiVersion": "2019-12-12",
-            "name": "[concat(parameters('databaseAccounts_testverseagility_name'), '/data/documents')]",
+            "name": "[concat(variables('databaseName'), '/data/documents')]",
             "dependsOn": [
-                "[resourceId('Microsoft.DocumentDB/databaseAccounts/sqlDatabases', parameters('databaseAccounts_testverseagility_name'), 'data')]",
-                "[resourceId('Microsoft.DocumentDB/databaseAccounts', parameters('databaseAccounts_testverseagility_name'))]"
+                "[resourceId('Microsoft.DocumentDB/databaseAccounts/sqlDatabases', variables('databaseName'), 'data')]",
+                "[resourceId('Microsoft.DocumentDB/databaseAccounts', variables('databaseName'))]"
             ],
             "properties": {
                 "resource": {
@@ -423,10 +406,10 @@
         {
             "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
             "apiVersion": "2019-06-01",
-            "name": "[concat(parameters('storageAccounts_verseagilitystorage_name'), '/default/azure-webjobs-hosts')]",
+            "name": "[concat(variables('storageName'), '/default/azure-webjobs-hosts')]",
             "dependsOn": [
-                "[resourceId('Microsoft.Storage/storageAccounts/blobServices', parameters('storageAccounts_verseagilitystorage_name'), 'default')]",
-                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_verseagilitystorage_name'))]"
+                "[resourceId('Microsoft.Storage/storageAccounts/blobServices', variables('storageName'), 'default')]",
+                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageName'))]"
             ],
             "properties": {
                 "publicAccess": "None"
@@ -435,10 +418,10 @@
         {
             "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
             "apiVersion": "2019-06-01",
-            "name": "[concat(parameters('storageAccounts_verseagilitystorage_name'), '/default/azure-webjobs-secrets')]",
+            "name": "[concat(variables('storageName'), '/default/azure-webjobs-secrets')]",
             "dependsOn": [
-                "[resourceId('Microsoft.Storage/storageAccounts/blobServices', parameters('storageAccounts_verseagilitystorage_name'), 'default')]",
-                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_verseagilitystorage_name'))]"
+                "[resourceId('Microsoft.Storage/storageAccounts/blobServices', variables('storageName'), 'default')]",
+                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageName'))]"
             ],
             "properties": {
                 "publicAccess": "None"
@@ -447,10 +430,10 @@
         {
             "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
             "apiVersion": "2019-06-01",
-            "name": "[concat(parameters('storageAccounts_verseagilitystorage_name'), '/default/data')]",
+            "name": "[concat(variables('storageName'), '/default/data')]",
             "dependsOn": [
-                "[resourceId('Microsoft.Storage/storageAccounts/blobServices', parameters('storageAccounts_verseagilitystorage_name'), 'default')]",
-                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_verseagilitystorage_name'))]"
+                "[resourceId('Microsoft.Storage/storageAccounts/blobServices', variables('storageName'), 'default')]",
+                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageName'))]"
             ],
             "properties": {
                 "publicAccess": "None"
@@ -459,10 +442,10 @@
         {
             "type": "Microsoft.Storage/storageAccounts/fileServices/shares",
             "apiVersion": "2019-06-01",
-            "name": "[concat(parameters('storageAccounts_verseagilitystorage_name'), '/default/testverseagilitybf63')]",
+            "name": "[concat(variables('storageName'), '/default/testverseagilitybf63')]",
             "dependsOn": [
-                "[resourceId('Microsoft.Storage/storageAccounts/fileServices', parameters('storageAccounts_verseagilitystorage_name'), 'default')]",
-                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccounts_verseagilitystorage_name'))]"
+                "[resourceId('Microsoft.Storage/storageAccounts/fileServices', variables('storageName'), 'default')]",
+                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageName'))]"
             ],
             "properties": {
                 "shareQuota": 5120
