@@ -270,8 +270,7 @@
                     "CosmosDBConnectionString": "[listConnectionStrings(resourceId('Microsoft.DocumentDB/databaseAccounts', variables('databaseName')), '2019-12-12').connectionStrings[0].connectionString]",
                     "FUNCTIONS_WORKER_RUNTIME": "node",
                     "FUNCTIONS_EXTENSION_VERSION": "~3",
-                    "WEBSITE_NODE_DEFAULT_VERSION": "~10",
-                    "test": "[resourceId('microsoft.insights/components', variables('insightsComponent'))]"
+                    "WEBSITE_NODE_DEFAULT_VERSION": "~10"
                   }
                 }
             ]
@@ -486,7 +485,6 @@
                 "tier": "Basic"
             },
             "identity": {
-                "tenantId": "[subscription().tenantId]",
                 "type": "SystemAssigned"
             },
             "properties": {
