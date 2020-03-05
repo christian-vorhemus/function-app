@@ -468,7 +468,8 @@
                 "sku": {
                     "name": "Standard",
                     "family": "A"
-                }
+                },
+                "tenantId": "[subscription().tenantId]"
             }
         },
         {
@@ -484,7 +485,6 @@
                 "tier": "Basic"
             },
             "identity": {
-                "principalId": "55a0ac51-ac8a-42ab-a365-f334f8f4d5ae",
                 "type": "SystemAssigned"
             },
             "properties": {
