@@ -8,7 +8,9 @@
         "servicePlan": "[toLower(concat('ASP-Serviceplan-', uniqueString(resourceGroup().id) ) )]",
         "databaseName": "[toLower(concat('verscosmos', uniqueString(resourceGroup().id) ) )]",
         "ruleName": "failure anomalies - versinsights",
+        "keyvaultName": "[toLower(concat('verskeyvault', uniqueString(resourceGroup().id) ) )]",
         "storageName": "[toLower(concat('ver', uniqueString(resourceGroup().id) ) )]",
+        "amlWorkspaceName": "[toLower(concat('vers-aml-workspace-', uniqueString(resourceGroup().id) ) )]",
         "ruleScope": "[concat(resourceGroup().id, '/providers/microsoft.insights/actiongroups/application%20insights%20smart%20detection')]",
         "repoURL": "https://github.com/christian-vorhemus/function-app.git",
         "branch": "master"
@@ -451,6 +453,45 @@
             ],
             "properties": {
                 "shareQuota": 5120
+            }
+        },
+        {
+            "type": "Microsoft.KeyVault/vaults",
+            "apiVersion": "2015-06-01",
+            "name": "[variables('keyvaultName')]",
+            "location": "westeurope",
+            "properties": {
+                "accessPolicies": [],
+                "enabledForDeployment": true,
+                "enabledForTemplateDeployment": true,
+                "enabledForVolumeEncryption": true,
+                "sku": {
+                    "name": "Standard",
+                    "family": "A"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.MachineLearningServices/workspaces",
+            "apiVersion": "2018-11-19",
+            "name": "[variables('amlWorkspaceName')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.KeyVault/vaults', variables('keyvaultName'))]"
+            ],
+            "location": "westeurope",
+            "sku": {
+                "name": "Basic",
+                "tier": "Basic"
+            },
+            "identity": {
+                "principalId": "55a0ac51-ac8a-42ab-a365-f334f8f4d5ae",
+                "type": "SystemAssigned"
+            },
+            "properties": {
+                "storageAccount": "[resourceId('Microsoft.Storage/storageAccounts', variables('storageName'))]",
+                "keyVault": "[resourceId('Microsoft.KeyVault/vaults', variables('keyvaultName'))]",
+                "applicationInsights": "resourceId('microsoft.insights/components', variables('insightsComponent'))",
+                "discoveryUrl": "https://westeurope.experiments.azureml.net/discovery"
             }
         }
     ]
