@@ -259,7 +259,7 @@
                     "dependsOn": [
                         "[resourceId('Microsoft.Web/Sites', variables('functionName'))]",
                         "[resourceId('microsoft.insights/components', variables('insightsComponent'))]",
-                        "[resourceId('Microsoft.Web/sites/host/functionKeys', variables('functionName'), '/default/hostkey')]"
+                        "[resourceId('Microsoft.Web/sites/host/functionKeys', concat(variables('functionName'), '/default/hostkey'))]"
                     ],
                     "tags": {
                         "displayName": "appsettings"
