@@ -4,7 +4,6 @@
     "parameters": {},
     "variables": {
         "functionName": "[toLower(concat('versfunction', uniqueString(resourceGroup().id) ) )]",
-        "functionNameKey": "[toLower(concat('versfunction', uniqueString(resourceGroup().id), '/default/hostkey'))]",
         "insightsComponent": "[toLower(concat('versinsights', uniqueString(resourceGroup().id) ) )]",
         "servicePlan": "[toLower(concat('ASP-Serviceplan-', uniqueString(resourceGroup().id) ) )]",
         "databaseName": "[toLower(concat('verscosmos', uniqueString(resourceGroup().id) ) )]",
@@ -259,7 +258,7 @@
                         "[resourceId('Microsoft.Web/Sites', variables('functionName'))]"
                     ],
                     "apiVersion": "2018-11-01",
-                    "name": "[variables('functionNameKey')]",
+                    "name": "[concat(variables('functionName'), '/default/hostkey')]",
                     "properties": {
                         "name": "hostkey"
                     }
@@ -283,7 +282,7 @@
                         "FUNCTIONS_WORKER_RUNTIME": "node",
                         "FUNCTIONS_EXTENSION_VERSION": "~3",
                         "WEBSITE_NODE_DEFAULT_VERSION": "~10",
-                        "Function_Host_Key": "[listkeys(concat(resourceId('Microsoft.Web/Sites', variables('functionName')), '/host/default/'),'2016-08-01').functionKeys.hostkey]"
+                        "FunctionHostKey": "[listkeys(concat(resourceId('Microsoft.Web/Sites', variables('functionName')), '/host/default/'),'2016-08-01').functionKeys.hostkey]"
                     }
                 }
             ]

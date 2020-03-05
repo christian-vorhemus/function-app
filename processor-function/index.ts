@@ -6,6 +6,7 @@ import {HttpClient} from '../common/http-client';
 // this automatic call, just disable the function
 
 const hostname: string = process.env["WEBSITE_HOSTNAME"];
+const functionHostKey: string = process.env["FunctionHostKey"];
 const storageAccount: string = process.env["AzureWebJobsStorage"].split(";")[1].replace("AccountName=", "");
 const httpClient = HttpClient.getInstance();
 
@@ -21,7 +22,7 @@ export async function run(context: Context, docblob: Buffer) {
     }
 
     const docPath = context.bindingData.blobTrigger;
-    var url = prefix + hostname + "/api/storevalues?source=https://" + storageAccount + ".blob.core.windows.net/" + docPath;
+    var url = prefix + hostname + "/api/storevalues?source=https://" + storageAccount + ".blob.core.windows.net/" + docPath + "?code=" + functionHostKey
 
     context.log("Calling url " + url);
     httpClient.post(url, {});
