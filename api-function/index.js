@@ -18,8 +18,10 @@ function storeValues(context, blob) {
     return __awaiter(this, void 0, void 0, function* () {
         return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
             var documents;
+            // Parsers bring a document into the well defined OutputSchema format.
+            // Add an if-else-statement here to decide how documents should be processed (e.g. based on the Content-Type)
+            // To parse a new file type, add a folder and class to the /parser directory
             if (blob.contentType == "text/csv" || blob.contentType == "application/vnd.ms-excel") {
-                // Parsers bring a document into the well defined OutputSchema format.
                 var csvParser = new csv_parser_1.CSVParser(blob.content);
                 documents = yield csvParser.parse();
             }
@@ -69,7 +71,7 @@ function run(context, req) {
             context.res = response.create();
         }
         else {
-            var response = new http_response_1.HttpResponse(http_response_1.Status.SUCCESS, "Successfully uploaded", { "test": 1 });
+            var response = new http_response_1.HttpResponse(http_response_1.Status.BADREQUEST, "No valid command was provided");
             context.res = response.create();
         }
     });

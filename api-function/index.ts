@@ -13,8 +13,11 @@ async function storeValues(context: Context, blob: StorageResponse): Promise<boo
     return new Promise(async (resolve, reject) => {
         var documents: Array<OutputSchema>;
 
+        // Parsers bring a document into the well defined OutputSchema format.
+        // Add an if-else-statement here to decide how documents should be processed (e.g. based on the Content-Type)
+        // To parse a new file type, add a folder and class to the /parser directory
+
         if(blob.contentType == "text/csv" || blob.contentType == "application/vnd.ms-excel") {
-            // Parsers bring a document into the well defined OutputSchema format.
             var csvParser: CSVParser = new CSVParser(blob.content);
             documents = await csvParser.parse();
         } else if(blob.contentType == "application/json") {
@@ -71,7 +74,7 @@ export async function run(context: Context, req: HttpRequest) {
         var response: HttpResponse = new HttpResponse(Status.SUCCESS, "Test successful");
         context.res = response.create();
     } else {
-        var response: HttpResponse = new HttpResponse(Status.SUCCESS, "Successfully uploaded", { "test": 1 });
+        var response: HttpResponse = new HttpResponse(Status.BADREQUEST, "No valid command was provided");
         context.res = response.create();
     }
 
