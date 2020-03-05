@@ -421,20 +421,6 @@
             }
         },
         {
-            "type": "Microsoft.DocumentDB/databaseAccounts/sqlDatabases/throughputSettings",
-            "apiVersion": "2019-12-12",
-            "name": "[concat(parameters('databaseAccounts_testverseagility_name'), '/data/default')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.DocumentDB/databaseAccounts/sqlDatabases', parameters('databaseAccounts_testverseagility_name'), 'data')]",
-                "[resourceId('Microsoft.DocumentDB/databaseAccounts', parameters('databaseAccounts_testverseagility_name'))]"
-            ],
-            "properties": {
-                "resource": {
-                    "throughput": 400
-                }
-            }
-        },
-        {
             "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
             "apiVersion": "2019-06-01",
             "name": "[concat(parameters('storageAccounts_verseagilitystorage_name'), '/default/azure-webjobs-hosts')]",
