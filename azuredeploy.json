@@ -279,7 +279,8 @@
             "name": "[concat(variables('functionName'), '/web')]",
             "location": "West Europe",
             "dependsOn": [
-                "[resourceId('Microsoft.Web/sites', variables('functionName'))]"
+                "[resourceId('Microsoft.Web/sites', variables('functionName'))]",
+                "[resourceId('Microsoft.Web/sites/config/', variables('functionName'), 'appsettings')]"
             ],
             "properties": {
                 "numberOfWorkers": 1,
