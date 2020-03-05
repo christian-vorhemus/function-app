@@ -8,7 +8,7 @@
         "servicePlan": "[toLower(concat('ASP-Serviceplan-', uniqueString(resourceGroup().id) ) )]",
         "databaseName": "[toLower(concat('verscosmos', uniqueString(resourceGroup().id) ) )]",
         "ruleName": "failure anomalies - versinsights",
-        "keyvaultName": "[toLower(concat('verskeyvault', uniqueString(resourceGroup().id) ) )]",
+        "keyvaultName": "[toLower(concat('verskeys', uniqueString(resourceGroup().id) ) )]",
         "storageName": "[toLower(concat('ver', uniqueString(resourceGroup().id) ) )]",
         "amlWorkspaceName": "[toLower(concat('vers-aml-workspace-', uniqueString(resourceGroup().id) ) )]",
         "ruleScope": "[concat(resourceGroup().id, '/providers/microsoft.insights/actiongroups/application%20insights%20smart%20detection')]",
