@@ -13,7 +13,7 @@ npm install
 ```
 func extensions install
 ```
-
+ 
 3) If you debug locally, create a file `local.settings.json` in the same directory as folders `api` and `blob-trigger` and add the following values:
 ```
 {
