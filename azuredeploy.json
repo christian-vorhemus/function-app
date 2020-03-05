@@ -241,7 +241,7 @@
                     "name": "web",
                     "type": "sourcecontrols",
                     "dependsOn": [
-
+                        "[resourceId('Microsoft.Web/Sites', variables('functionName'))]"
                     ],
                     "properties": {
                         "RepoUrl": "[variables('repoURL')]",
@@ -255,7 +255,8 @@
                   "apiVersion": "2018-11-01",
                   "dependsOn": [
                     "[resourceId('Microsoft.Web/Sites', variables('functionName'))]",
-                    "[resourceId('microsoft.insights/components', variables('insightsComponent'))]"
+                    "[resourceId('microsoft.insights/components', variables('insightsComponent'))]",
+                    "[resourceId('Microsoft.Web/sites/sourcecontrols', variables('functionName'), 'web')]"
                   ],
                   "tags": {
                     "displayName": "appsettings"
@@ -278,7 +279,8 @@
             "name": "[concat(variables('functionName'), '/web')]",
             "location": "West Europe",
             "dependsOn": [
-                "[resourceId('Microsoft.Web/sites', variables('functionName'))]"
+                "[resourceId('Microsoft.Web/sites', variables('functionName'))]",
+                "[resourceId('Microsoft.Web/sites/appsettings', variables('functionName'), 'config')]"
             ],
             "properties": {
                 "numberOfWorkers": 1,
