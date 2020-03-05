@@ -477,7 +477,9 @@
             "apiVersion": "2018-11-19",
             "name": "[variables('amlWorkspaceName')]",
             "dependsOn": [
-                "[resourceId('Microsoft.KeyVault/vaults', variables('keyvaultName'))]"
+                "[resourceId('Microsoft.KeyVault/vaults', variables('keyvaultName'))]",
+                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageName'))]",
+                "[resourceId('microsoft.insights/components', variables('insightsComponent'))]"
             ],
             "location": "westeurope",
             "sku": {
