@@ -25,6 +25,7 @@ export async function run(context: Context, docblob: Buffer) {
     var url = prefix + hostname + "/api/storevalues?source=https://" + storageAccount + ".blob.core.windows.net/" + docPath + "?code=" + functionHostKey
 
     context.log("Calling url " + url);
-    httpClient.post(url, {});
+    var response = await httpClient.post(url, {});
+    context.log(response);
 
 }
