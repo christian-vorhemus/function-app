@@ -259,7 +259,7 @@
                     "dependsOn": [
                         "[resourceId('Microsoft.Web/Sites', variables('functionName'))]",
                         "[resourceId('microsoft.insights/components', variables('insightsComponent'))]",
-                        "[resourceId('Microsoft.Web/sites/host/functionKeys', variables('functionName'))]"
+                        "[resourceId('Microsoft.Web/sites/host/functionKeys', variables('functionName'), '/default/hostkey')]"
                     ],
                     "tags": {
                         "displayName": "appsettings"
@@ -272,7 +272,7 @@
                         "FUNCTIONS_WORKER_RUNTIME": "node",
                         "FUNCTIONS_EXTENSION_VERSION": "~3",
                         "WEBSITE_NODE_DEFAULT_VERSION": "~10",
-                        "FunctionHostKey": "[listkeys(concat(resourceId('Microsoft.Web/Sites', variables('functionName')), '/host/default/'),'2016-08-01').functionKeys.hostkey]"
+                        "Function_Host_Key": "[listkeys(concat(resourceId('Microsoft.Web/Sites', variables('functionName')), '/host/default/'),'2016-08-01').functionKeys.hostkey]"
                     }
                 }
             ]
@@ -283,7 +283,7 @@
                 "[resourceId('Microsoft.Web/Sites', variables('functionName'))]"
             ],
             "apiVersion": "2018-11-01",
-            "name": "[variables('functionName')]",
+            "name": "[concat(variables('functionName'), '/default/hostkey')]",
             "properties": {
                 "name": "hostkey"
             }
