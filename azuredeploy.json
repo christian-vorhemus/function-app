@@ -270,7 +270,8 @@
                     "CosmosDBConnectionString": "[listConnectionStrings(resourceId('Microsoft.DocumentDB/databaseAccounts', variables('databaseName')), '2019-12-12').connectionStrings[0].connectionString]",
                     "FUNCTIONS_WORKER_RUNTIME": "node",
                     "FUNCTIONS_EXTENSION_VERSION": "~3",
-                    "WEBSITE_NODE_DEFAULT_VERSION": "~10"
+                    "WEBSITE_NODE_DEFAULT_VERSION": "~10",
+                    "test": "[resourceId('microsoft.insights/components', variables('insightsComponent'))]"
                   }
                 }
             ]
@@ -485,12 +486,13 @@
                 "tier": "Basic"
             },
             "identity": {
+                "tenantId": "[subscription().tenantId]",
                 "type": "SystemAssigned"
             },
             "properties": {
                 "storageAccount": "[resourceId('Microsoft.Storage/storageAccounts', variables('storageName'))]",
                 "keyVault": "[resourceId('Microsoft.KeyVault/vaults', variables('keyvaultName'))]",
-                "applicationInsights": "resourceId('microsoft.insights/components', variables('insightsComponent'))",
+                "applicationInsights": "[resourceId('microsoft.insights/components', variables('insightsComponent'))]",
                 "discoveryUrl": "https://westeurope.experiments.azureml.net/discovery"
             }
         }
