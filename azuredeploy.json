@@ -272,21 +272,6 @@
                         "FUNCTIONS_EXTENSION_VERSION": "~3",
                         "WEBSITE_NODE_DEFAULT_VERSION": "~10"
                     }
-                },
-                {
-                    "name": "appsettings",
-                    "type": "config",
-                    "apiVersion": "2018-11-01",
-                    "dependsOn": [
-                        "[resourceId('Microsoft.Web/Sites', variables('functionName'))]",
-                        "[resourceId('Microsoft.Web/sites/sourcecontrols', variables('functionName'), 'web')]"
-                    ],
-                    "tags": {
-                        "displayName": "appsettings2"
-                    },
-                    "properties": {
-                        "FunctionHostKey": "[listkeys(concat(resourceId('Microsoft.Web/Sites', variables('functionName')), '/host/default/'),'2016-08-01').functionKeys.default]"
-                    }
                 }
             ]
         },
@@ -297,9 +282,11 @@
             "location": "West Europe",
             "dependsOn": [
                 "[resourceId('Microsoft.Web/sites', variables('functionName'))]",
-                "[resourceId('Microsoft.Web/sites/config/', variables('functionName'), 'appsettings')]"
+                "[resourceId('Microsoft.Web/sites/config/', variables('functionName'), 'appsettings')]",
+                "[resourceId('Microsoft.Web/sites/sourcecontrols', variables('functionName'), 'web')]"
             ],
             "properties": {
+                "FunctionHostKey": "[listkeys(concat(resourceId('Microsoft.Web/Sites', variables('functionName')), '/host/default/'),'2016-08-01').functionKeys.default]",
                 "numberOfWorkers": 1,
                 "defaultDocuments": [
                     "Default.htm",
