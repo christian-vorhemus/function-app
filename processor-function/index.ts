@@ -1,5 +1,6 @@
 import {Context} from '@azure/functions';
 import {HttpClient} from '../common/http-client';
+import {readFileSync} from 'fs';
 
 // The purpose of this function is to automatically trigger the official endpoint ("api"-function)
 // once a new document is uploaded to the data container in the storage. If you want to disable

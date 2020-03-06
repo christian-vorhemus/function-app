@@ -1,6 +1,13 @@
 {
-  "azureFunctions.projectRuntime": "beta",
-  "azureFunctions.projectLanguage": "JavaScript",
+  "azureFunctions.projectRuntime": "~2",
+  "azureFunctions.projectLanguage": "TypeScript",
   "azureFunctions.templateFilter": "Verified",
-  "azure.tenant": "stracloud.onmicrosoft.com"
+  "azure.tenant": "microsoft.onmicrosoft.com",
+  "files.exclude": {
+    "obj": true,
+    "bin": true
+  },
+  "azureFunctions.deploySubpath": ".",
+  "debug.internalConsoleOptions": "neverOpen",
+  "azureFunctions.preDeployTask": "npm prune"
 }
