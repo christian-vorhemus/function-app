@@ -282,7 +282,7 @@
                         "[resourceId('Microsoft.Web/sites/sourcecontrols', variables('functionName'), 'web')]"
                     ],
                     "tags": {
-                        "displayName": "appsettings"
+                        "displayName": "appsettings2"
                     },
                     "properties": {
                         "FunctionHostKey": "[listkeys(concat(resourceId('Microsoft.Web/Sites', variables('functionName')), '/host/default/'),'2016-08-01').functionKeys.default]"
