@@ -13,6 +13,7 @@ const http_client_1 = require("../common/http-client");
 // once a new document is uploaded to the data container in the storage. If you want to disable
 // this automatic call, just disable the function
 const hostname = process.env["WEBSITE_HOSTNAME"];
+const functionHostKey = process.env["FunctionHostKey"];
 const storageAccount = process.env["AzureWebJobsStorage"].split(";")[1].replace("AccountName=", "");
 const httpClient = http_client_1.HttpClient.getInstance();
 function run(context, docblob) {
@@ -26,9 +27,10 @@ function run(context, docblob) {
             prefix = "https://";
         }
         const docPath = context.bindingData.blobTrigger;
-        var url = prefix + hostname + "/api/storevalues?source=https://" + storageAccount + ".blob.core.windows.net/" + docPath;
+        var url = prefix + hostname + "/api/storevalues?source=https://" + storageAccount + ".blob.core.windows.net/" + docPath + "?code=" + functionHostKey;
         context.log("Calling url " + url);
-        httpClient.post(url, {});
+        var response = yield httpClient.post(url, {});
+        context.log(response);
     });
 }
 exports.run = run;
