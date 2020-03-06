@@ -23,7 +23,7 @@ export async function run(context: Context, docblob: Buffer) {
     }
 
     const docPath = context.bindingData.blobTrigger;
-    var url = prefix + hostname + "/api/storevalues?source=https://" + storageAccount + ".blob.core.windows.net/" + docPath + "?code=" + functionHostKey
+    var url = prefix + hostname + "/api/storevalues?source=https://" + storageAccount + ".blob.core.windows.net/" + docPath + "&code=" + functionHostKey
 
     context.log("Calling url " + url);
     var response = await httpClient.post(url, {});

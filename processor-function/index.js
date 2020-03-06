@@ -1,16 +1,14 @@
 "use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const http_client_1 = require("../common/http-client");
-const fs_1 = require("fs");
 // The purpose of this function is to automatically trigger the official endpoint ("api"-function)
 // once a new document is uploaded to the data container in the storage. If you want to disable
 // this automatic call, just disable the function
@@ -21,9 +19,6 @@ const httpClient = http_client_1.HttpClient.getInstance();
 function run(context, docblob) {
     return __awaiter(this, void 0, void 0, function* () {
         context.log('document-processor triggered by storage blob');
-        let data = fs_1.readFileSync('./host.json').toString();
-        var hostData = JSON.parse(data);
-        context.log(hostData);
         var prefix = "";
         if (hostname.indexOf("localhost") == 0) {
             prefix = "http://";
@@ -32,7 +27,7 @@ function run(context, docblob) {
             prefix = "https://";
         }
         const docPath = context.bindingData.blobTrigger;
-        var url = prefix + hostname + "/api/storevalues?source=https://" + storageAccount + ".blob.core.windows.net/" + docPath + "?code=" + functionHostKey;
+        var url = prefix + hostname + "/api/storevalues?source=https://" + storageAccount + ".blob.core.windows.net/" + docPath + "&code=" + functionHostKey;
         context.log("Calling url " + url);
         var response = yield httpClient.post(url, {});
         context.log(response);
