@@ -10,8 +10,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const output_1 = require("../../schema/output");
 class JsonParser {
-    constructor(file) {
-        this.fileBuffer = file;
+    constructor(blob, storageConnection) {
+        this.fileBuffer = blob.content;
+        this.storageConnection = storageConnection;
+        this.fileContentType = blob.contentType;
     }
     parse() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -32,6 +34,7 @@ class JsonParser {
                         output.body = obj['question']['text'];
                         output.subject = obj['question']['title'];
                         output.upvotes = obj['question']['upvotes'];
+                        output.status = output_1.Status.train;
                         output.id = obj['id'];
                         output.language = obj['language'];
                         output.url = obj['url'];

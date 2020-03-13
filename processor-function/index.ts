@@ -17,9 +17,9 @@ export async function run(context: Context, docblob: Buffer) {
 
     var prefix = "";
     if(hostname.indexOf("localhost") == 0) {
-        prefix = "http://"
+        prefix = "http://";
     } else {
-        prefix =  "https://"
+        prefix =  "https://";
     }
 
     const docPath = context.bindingData.blobTrigger;

@@ -1,13 +1,18 @@
 import {IParser} from '../../schema/parser';
-import {OutputSchema, Answer} from '../../schema/output';
+import {OutputSchema, Answer, Status} from '../../schema/output';
+import {StorageConnection, StorageResponse} from '../../common/storage-connection';
 import {Guid} from '../../common/guid'
 
 export class JsonParser implements IParser {
 
     private fileBuffer: Buffer;
+    private storageConnection: StorageConnection;
+    private fileContentType: string;
 
-    constructor(file: Buffer) {
-        this.fileBuffer = file;
+    constructor(blob: StorageResponse, storageConnection: StorageConnection) {
+        this.fileBuffer = blob.content;
+        this.storageConnection = storageConnection;
+        this.fileContentType = blob.contentType;
     }
 
     public async parse(): Promise<Array<OutputSchema>> {
@@ -33,6 +38,7 @@ export class JsonParser implements IParser {
                     output.body = obj['question']['text'];
                     output.subject = obj['question']['title'];
                     output.upvotes = obj['question']['upvotes'];
+                    output.status = Status.train;
     
                     output.id = obj['id'];
                     output.language = obj['language'];
