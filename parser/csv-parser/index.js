@@ -87,6 +87,7 @@ class CSVParser {
                             var attachment = new output_1.Attachment();
                             attachment.text = text.split('<body>').pop().split('</body>')[0];
                             attachment.filetype = blob.contentType;
+                            attachment.filename = blob.name;
                             attachment.content.push({
                                 "raw": text
                             });

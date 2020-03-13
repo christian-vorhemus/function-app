@@ -16,18 +16,6 @@
       "name": "res",
       "type": "http",
       "direction": "out"
-    },
-    {
-      "direction": "out",
-      "type": "cosmosDB",
-      "name": "cosmosOutput",
-      "databaseName": "data",
-      "collectionName": "documents",
-      "partitionKey": "date",
-      "leaseCollectionName": "leases",
-      "createLeaseCollectionIfNotExists": true,
-      "connectionStringSetting": "CosmosDBConnectionString",
-      "createIfNotExists": true
     }
   ]
 }

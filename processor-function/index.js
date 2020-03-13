@@ -9,28 +9,73 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const http_client_1 = require("../common/http-client");
-// The purpose of this function is to automatically trigger the official endpoint ("api"-function)
-// once a new document is uploaded to the data container in the storage. If you want to disable
-// this automatic call, just disable the function
+const storage_connection_1 = require("../common/storage-connection");
+const csv_parser_1 = require("../parser/csv-parser");
+const json_parser_1 = require("../parser/json-parser");
+const default_parser_1 = require("../parser/default-parser");
+// The purpose of this function is to store documents that are placed into the /data container
+// of the created storage account
 const hostname = process.env["WEBSITE_HOSTNAME"];
 const functionHostKey = process.env["FunctionHostKey"];
 const storageAccount = process.env["AzureWebJobsStorage"].split(";")[1].replace("AccountName=", "");
 const httpClient = http_client_1.HttpClient.getInstance();
+// Extract storage key from storage account connection string in environment variable "AzureWebJobsStorage"
+const storageKey = process.env["AzureWebJobsStorage"].split(";")[2].replace("AccountKey=", "");
+function storeValues(context, blob, storageConnection) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+            var documents;
+            // Parsers bring a document into the well defined OutputSchema format.
+            // Add an if-else-statement here to decide how documents should be processed (e.g. based on the Content-Type)
+            // To parse a new file type, add a folder and class to the /parser directory
+            // The DefaultParser will call the documentconverter-function. If you just need a general parser without finetuning
+            // the parsing process, you may use the DefaultParser as your standard parser.
+            if (blob.contentType == "text/csv" || blob.contentType == "application/vnd.ms-excel") {
+                var csvParser = new csv_parser_1.CSVParser(blob, storageConnection);
+                documents = yield csvParser.parse();
+            }
+            else if (blob.contentType == "application/json") {
+                var jsonParser = new json_parser_1.JsonParser(blob, storageConnection);
+                documents = yield jsonParser.parse();
+            }
+            else {
+                var defaultParser = new default_parser_1.DefaultParser(blob);
+                documents = yield defaultParser.parse();
+            }
+            context.bindings.cosmosOutput = JSON.stringify(documents);
+            resolve(true);
+        }));
+    });
+}
 function run(context, docblob) {
     return __awaiter(this, void 0, void 0, function* () {
         context.log('document-processor triggered by storage blob');
-        var prefix = "";
-        if (hostname.indexOf("localhost") == 0) {
-            prefix = "http://";
+        const docPath = context.bindingData.blobTrigger;
+        var accountName = storageAccount;
+        var containerName = docPath.split("/")[0];
+        var blobName = docPath.split("/")[1];
+        var storageConnection = new storage_connection_1.StorageConnection(accountName, storageKey, containerName);
+        var blob = yield storageConnection.getBlob(blobName);
+        // We don't await the values to be stored because this could take some time and Http triggered function
+        // will only allow idle open HTTP connections of about 2.5 minutes
+        var finished = yield storeValues(context, blob, storageConnection);
+        if (finished) {
+            context.log("Document processed");
         }
         else {
-            prefix = "https://";
+            context.log("Error while processing document");
         }
-        const docPath = context.bindingData.blobTrigger;
-        var url = prefix + hostname + "/api/storevalues?source=https://" + storageAccount + ".blob.core.windows.net/" + docPath + "&code=" + functionHostKey;
-        context.log("Calling url " + url);
-        var response = yield httpClient.post(url, {});
-        context.log(response);
+        // var prefix = "";
+        // if(hostname.indexOf("localhost") == 0) {
+        //     prefix = "http://";
+        // } else {
+        //     prefix =  "https://";
+        // }
+        // const docPath = context.bindingData.blobTrigger;
+        // var url = prefix + hostname + "/api/storevalues?source=https://" + storageAccount + ".blob.core.windows.net/" + docPath + "&code=" + functionHostKey
+        // context.log("Calling url " + url);
+        // var response = await httpClient.post(url, {});
+        // context.log(response);
     });
 }
 exports.run = run;
