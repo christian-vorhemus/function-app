@@ -1,10 +1,5 @@
 import {HttpRequest, Context} from '@azure/functions';
 import {HttpResponse, Status} from '../common/http-response';
-import {StorageConnection, StorageResponse} from '../common/storage-connection';
-import {CSVParser} from '../parser/csv-parser';
-import {OutputSchema} from '../schema/output';
-import {JsonParser} from '../parser/json-parser';
-import {DefaultParser} from '../parser/default-parser';
 
 // Extract storage key from storage account connection string in environment variable "AzureWebJobsStorage"
 const storageKey: string = process.env["AzureWebJobsStorage"].split(";")[2].replace("AccountKey=", "");
