@@ -1,5 +1,5 @@
 import {IParser} from '../../schema/parser';
-import {OutputSchema, Answer, Status} from '../../schema/output';
+import {OutputSchema, Answer, DocumentStatus} from '../../schema/output';
 import {StorageConnection, StorageResponse} from '../../common/storage-connection';
 import {HttpClient} from '../../common/http-client';
 import {Guid} from '../../common/guid';
@@ -53,7 +53,7 @@ export class DefaultParser implements IParser {
             }
 
             var outputs: Array<OutputSchema> = [];
-            output.status = Status.train;
+            output.status = DocumentStatus.train;
             var output: OutputSchema = new OutputSchema();
             output.id = Guid.create();
             output.body = text

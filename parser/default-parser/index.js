@@ -49,7 +49,7 @@ class DefaultParser {
                     reject("Error when calling documentconverter function");
                 }
                 var outputs = [];
-                output.status = output_1.Status.train;
+                output.status = output_1.DocumentStatus.train;
                 var output = new output_1.OutputSchema();
                 output.id = guid_1.Guid.create();
                 output.body = text;

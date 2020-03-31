@@ -39,7 +39,7 @@ class CSVParser {
                     output.date = row[7];
                     output.body = row[8];
                     output.upvotes = row[9];
-                    output.status = output_1.Status.train;
+                    output.status = output_1.DocumentStatus.train;
                     var answer = new output_1.Answer();
                     answer.body = row[12];
                     answer.date = row[11];

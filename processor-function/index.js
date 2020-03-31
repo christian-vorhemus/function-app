@@ -56,8 +56,6 @@ function run(context, docblob) {
         var blobName = docPath.split("/")[1];
         var storageConnection = new storage_connection_1.StorageConnection(accountName, storageKey, containerName);
         var blob = yield storageConnection.getBlob(blobName);
-        // We don't await the values to be stored because this could take some time and Http triggered function
-        // will only allow idle open HTTP connections of about 2.5 minutes
         var finished = yield storeValues(context, blob, storageConnection);
         if (finished) {
             context.log("Document processed");
@@ -65,17 +63,6 @@ function run(context, docblob) {
         else {
             context.log("Error while processing document");
         }
-        // var prefix = "";
-        // if(hostname.indexOf("localhost") == 0) {
-        //     prefix = "http://";
-        // } else {
-        //     prefix =  "https://";
-        // }
-        // const docPath = context.bindingData.blobTrigger;
-        // var url = prefix + hostname + "/api/storevalues?source=https://" + storageAccount + ".blob.core.windows.net/" + docPath + "&code=" + functionHostKey
-        // context.log("Calling url " + url);
-        // var response = await httpClient.post(url, {});
-        // context.log(response);
     });
 }
 exports.run = run;

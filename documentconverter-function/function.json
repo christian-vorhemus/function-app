@@ -1,7 +1,7 @@
 {
   "bindings": [
     {
-      "dataType": "string",
+      "dataType": "binary",
       "authLevel": "function",
       "name": "req",
       "type": "httpTrigger",

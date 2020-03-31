@@ -1,5 +1,5 @@
 import {IParser} from '../../schema/parser';
-import {OutputSchema, Answer, Status, Attachment, Label, Classification, Version} from '../../schema/output';
+import {OutputSchema, Answer, DocumentStatus, Attachment, Label, Classification, Version} from '../../schema/output';
 import {StorageConnection, StorageResponse} from '../../common/storage-connection';
 import {HttpClient} from '../../common/http-client';
 import {BlobItem} from '@azure/storage-blob';
@@ -44,7 +44,7 @@ export class JsonParser implements IParser {
                     output.body = obj['question']['text'];
                     output.subject = obj['question']['title'];
                     output.upvotes = obj['question']['upvotes'];
-                    output.status = Status.train;
+                    output.status = DocumentStatus.train;
     
                     output.id = obj['id'];
                     output.language = obj['language'];

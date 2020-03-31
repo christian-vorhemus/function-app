@@ -1,5 +1,5 @@
 import {IParser} from '../../schema/parser';
-import {OutputSchema, Answer, Attachment, Status, Label, Classification, Version} from '../../schema/output';
+import {OutputSchema, Answer, Attachment, DocumentStatus, Label, Classification, Version} from '../../schema/output';
 import {StorageConnection, StorageResponse} from '../../common/storage-connection';
 import {HttpClient} from '../../common/http-client';
 import {Guid} from '../../common/guid';
@@ -40,7 +40,7 @@ export class CSVParser implements IParser {
                 output.date = row[7];
                 output.body = row[8];
                 output.upvotes = row[9];
-                output.status = Status.train;
+                output.status = DocumentStatus.train;
 
                 var answer: Answer = new Answer();
                 answer.body = row[12];

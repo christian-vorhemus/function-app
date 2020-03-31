@@ -39,7 +39,7 @@ class JsonParser {
                         output.body = obj['question']['text'];
                         output.subject = obj['question']['title'];
                         output.upvotes = obj['question']['upvotes'];
-                        output.status = output_1.Status.train;
+                        output.status = output_1.DocumentStatus.train;
                         output.id = obj['id'];
                         output.language = obj['language'];
                         output.url = obj['url'];

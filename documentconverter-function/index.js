@@ -27,7 +27,7 @@ function run(context, req) {
         context.log('documentconverter endpoint triggered');
         var body = req.body;
         if ("name" in body == false || "content" in body == false || "contentType" in body == false) {
-            var response = new http_response_1.HttpResponse(http_response_1.Status.BADREQUEST, "documentconverter function must be called with JSON HTTP POST body containing 'name', 'content' and 'contentType'");
+            var response = new http_response_1.HttpResponse(http_response_1.Status.BADREQUEST, "documentconverter function must be called with JSON HTTP POST body containing 'name' (string), 'content' and 'contentType' (MIME type string). 'content' must be base64 encoded binary file.");
             context.res = response.create();
             return;
         }
@@ -44,7 +44,7 @@ function run(context, req) {
         }
         // Save file to disk
         fs_1.writeFileSync(blobName, buff);
-        // If blobContentType starts with "imgae", call OCR tool, otherwise use Apache Tika
+        // If blobContentType starts with "image", call OCR tool, otherwise use Apache Tika
         if (blobContentType.indexOf("image") == 0) {
             var imageConversion = yield ocrClient.convertImageToText(blobName);
             var regions = imageConversion['regions'];
