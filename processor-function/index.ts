@@ -27,6 +27,7 @@ async function storeValues(context: Context, blob: StorageResponse, storageConne
         // To parse a new file type, add a folder and class to the /parser directory
         // The DefaultParser will call the documentconverter-function. If you just need a general parser without finetuning
         // the parsing process, you may use the DefaultParser as your standard parser.
+
         if(blob.contentType == "text/csv" || blob.contentType == "application/vnd.ms-excel") {
             var csvParser: CSVParser = new CSVParser(blob, storageConnection);
             documents = await csvParser.parse();

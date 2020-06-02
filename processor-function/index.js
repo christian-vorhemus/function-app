@@ -30,6 +30,7 @@ function storeValues(context, blob, storageConnection) {
             // To parse a new file type, add a folder and class to the /parser directory
             // The DefaultParser will call the documentconverter-function. If you just need a general parser without finetuning
             // the parsing process, you may use the DefaultParser as your standard parser.
+            var start = new Date().getTime();
             if (blob.contentType == "text/csv" || blob.contentType == "application/vnd.ms-excel") {
                 var csvParser = new csv_parser_1.CSVParser(blob, storageConnection);
                 documents = yield csvParser.parse();
@@ -42,6 +43,8 @@ function storeValues(context, blob, storageConnection) {
                 var defaultParser = new default_parser_1.DefaultParser(blob);
                 documents = yield defaultParser.parse();
             }
+            var end = new Date().getTime();
+            var time = end - start;
             context.bindings.cosmosOutput = JSON.stringify(documents);
             resolve(true);
         }));

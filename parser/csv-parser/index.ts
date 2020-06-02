@@ -43,6 +43,11 @@ export class CSVParser implements IParser {
                 output.status = DocumentStatus.train;
 
                 var answer: Answer = new Answer();
+                if(row[10].toLowerCase() == "true") {
+                    answer.markedAsAnswer = "true";
+                } else {
+                    answer.markedAsAnswer = "false";
+                }
                 answer.body = row[12];
                 answer.date = row[11];
                 answer.upvotes = row[13];
@@ -60,7 +65,9 @@ export class CSVParser implements IParser {
                 output.label = label;
 
                 // Check if a container exists in the storage account which is named like the ID of the entry in the CSV
-                var exists = await this.storageConnection.containerExists(output.id);
+                // var exists = await this.storageConnection.containerExists(output.id);
+
+                var exists = false;
 
                 if(exists) {
                     var blobs: Array<BlobItem> = await this.storageConnection.listContainerBlobs(output.id);

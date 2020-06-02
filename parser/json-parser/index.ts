@@ -33,6 +33,12 @@ export class JsonParser implements IParser {
                     var output: OutputSchema = new OutputSchema();
                     var answer: Answer = new Answer();
     
+                    if(obj['answer']['markedAsAnswer'].toLowerCase() == "true") {
+                        answer.markedAsAnswer = "true";
+                    } else {
+                        answer.markedAsAnswer = "false";
+                    }
+
                     answer.date = obj['answer']['createdAt'];
                     answer.body = obj['answer']['text'];
                     answer.upvotes = obj['answer']['upvotes'];

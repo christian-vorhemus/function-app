@@ -30,6 +30,12 @@ class JsonParser {
                         var obj = objs[i];
                         var output = new output_1.OutputSchema();
                         var answer = new output_1.Answer();
+                        if (obj['answer']['markedAsAnswer'].toLowerCase() == "true") {
+                            answer.markedAsAnswer = "true";
+                        }
+                        else {
+                            answer.markedAsAnswer = "false";
+                        }
                         answer.date = obj['answer']['createdAt'];
                         answer.body = obj['answer']['text'];
                         answer.upvotes = obj['answer']['upvotes'];
