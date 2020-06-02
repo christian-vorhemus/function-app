@@ -65,9 +65,7 @@ export class CSVParser implements IParser {
                 output.label = label;
 
                 // Check if a container exists in the storage account which is named like the ID of the entry in the CSV
-                // var exists = await this.storageConnection.containerExists(output.id);
-
-                var exists = false;
+                var exists = await this.storageConnection.containerExists(output.id);
 
                 if(exists) {
                     var blobs: Array<BlobItem> = await this.storageConnection.listContainerBlobs(output.id);
